@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:roomai/screens/onboarding_screen_1.dart';
 
 class LandingScreen extends StatelessWidget {
   const LandingScreen({Key? key}) : super(key: key);
@@ -113,7 +114,7 @@ class LandingScreen extends StatelessWidget {
                   height: 56,
                   child: ElevatedButton(
                     onPressed: () {
-                      print("Onboarding'e geçiliyor...");
+                      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => OnboardingScreenOne()));
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xFFFF0000),
