@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'onboarding_screen_2.dart';
+
 class DesignFeature {
   final String title;
   final String imagePath;
@@ -11,9 +13,18 @@ class OnboardingScreenOne extends StatelessWidget {
   OnboardingScreenOne({Key? key}) : super(key: key);
 
   final List<DesignFeature> features = [
-    DesignFeature(title: "İç Mekan Tasarımı", imagePath: "assets/images/ic_mekan.png"),
-    DesignFeature(title: "Bahçe Tasarımı", imagePath: "assets/images/bahce.png"),
-    DesignFeature(title: "Balkon Tasarımı", imagePath: "assets/images/balkon.png"),
+    DesignFeature(
+      title: "İç Mekan Tasarımı",
+      imagePath: "assets/images/ic_mekan.png",
+    ),
+    DesignFeature(
+      title: "Bahçe Tasarımı",
+      imagePath: "assets/images/bahce.png",
+    ),
+    DesignFeature(
+      title: "Balkon Tasarımı",
+      imagePath: "assets/images/balkon.png",
+    ),
   ];
 
   @override
@@ -40,7 +51,8 @@ class OnboardingScreenOne extends StatelessWidget {
               Expanded(
                 child: ListView.separated(
                   itemCount: features.length,
-                  separatorBuilder: (context, index) => const SizedBox(height: 20),
+                  separatorBuilder: (context, index) =>
+                      const SizedBox(height: 20),
                   itemBuilder: (context, index) {
                     return _ComparisonCard(feature: features[index]);
                   },
@@ -54,7 +66,12 @@ class OnboardingScreenOne extends StatelessWidget {
                 height: 56,
                 child: ElevatedButton(
                   onPressed: () {
-
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => OnboardingScreenTwo(),
+                      ),
+                    );
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFFFF0000),
@@ -84,10 +101,7 @@ class OnboardingScreenOne extends StatelessWidget {
 class _ComparisonCard extends StatelessWidget {
   final DesignFeature feature;
 
-  const _ComparisonCard({
-    Key? key,
-    required this.feature,
-  }) : super(key: key);
+  const _ComparisonCard({Key? key, required this.feature}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -118,7 +132,8 @@ class _ComparisonCard extends StatelessWidget {
               Image.asset(
                 feature.imagePath,
                 fit: BoxFit.cover,
-                errorBuilder: (c, e, s) => const Center(child: Icon(Icons.image, color: Colors.white)),
+                errorBuilder: (c, e, s) =>
+                    const Center(child: Icon(Icons.image, color: Colors.white)),
               ),
             ],
           ),
