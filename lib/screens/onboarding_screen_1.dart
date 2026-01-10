@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import 'onboarding_screen_2.dart';
 
 class DesignFeature {

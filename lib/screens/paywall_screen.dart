@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/legacy.dart';
+import 'package:roomai/screens/home_screen.dart';
 
-// STATE: Seçilen planı tutan değişken (Varsayılan: Yıllık 'yearly')
 final selectedPlanProvider = StateProvider<String>((ref) => 'yearly');
 
 class PaywallScreen extends ConsumerWidget {
@@ -10,27 +10,22 @@ class PaywallScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // Seçili planı dinliyoruz (State değişince ekran yenilenir)
     final selectedPlan = ref.watch(selectedPlanProvider);
 
     return Scaffold(
       body: Stack(
         fit: StackFit.expand,
         children: [
-          // 1. ARKAPLAN RESMİ (Bulanık Oda)
           Image.asset(
-            'assets/images/img_7.png', // Senin oda resmin
+            'assets/images/img_7.png',
             fit: BoxFit.cover,
           ),
 
-          // 2. SİYAH FİLTRE (Resmi karartmak için)
           Container(color: Colors.black.withOpacity(0.80)),
 
-          // 3. İÇERİK
           SafeArea(
             child: Column(
               children: [
-                // KAPAT BUTONU (Sol Üst)
                 Align(
                   alignment: Alignment.topLeft,
                   child: IconButton(
@@ -39,9 +34,8 @@ class PaywallScreen extends ConsumerWidget {
                   ),
                 ),
 
-                const Spacer(flex: 1), // Üstten biraz boşluk bırak
+                const Spacer(flex: 1),
 
-                // BAŞLIK
                 const Padding(
                   padding: EdgeInsets.symmetric(horizontal: 24),
                   child: Text(
@@ -56,14 +50,12 @@ class PaywallScreen extends ConsumerWidget {
                   ),
                 ),
 
-                const Spacer(flex: 2), // Başlık ile kartlar arası boşluk
+                const Spacer(flex: 2),
 
-                // --- FİYAT KARTLARI (ANA KISIM) ---
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16),
                   child: Row(
                     children: [
-                      // HAFTALIK KART
                       Expanded(
                         child: _PricingCard(
                           title: "Haftalık",
@@ -74,16 +66,15 @@ class PaywallScreen extends ConsumerWidget {
                         ),
                       ),
 
-                      const SizedBox(width: 16), // İki kart arası boşluk
+                      const SizedBox(width: 16),
 
-                      // YILLIK KART
                       Expanded(
                         child: _PricingCard(
                           title: "Yıllık",
                           price: "TL1.999,99",
                           subPrice: "Haftalık TL41,67",
                           badgeText: "İndirim 81%",
-                          isYearly: true, // Yıldız ikonu için
+                          isYearly: true,
                           isSelected: selectedPlan == 'yearly',
                           onTap: () => ref.read(selectedPlanProvider.notifier).state = 'yearly',
                         ),
@@ -91,11 +82,9 @@ class PaywallScreen extends ConsumerWidget {
                     ],
                   ),
                 ),
-                // -----------------------------------
 
                 const SizedBox(height: 20),
 
-                // BİLGİLENDİRME YAZISI (Check iconlu)
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 24),
                   child: Row(
@@ -115,7 +104,6 @@ class PaywallScreen extends ConsumerWidget {
 
                 const Spacer(flex: 1),
 
-                // DEVAM ET BUTONU
                 Container(
                   width: double.infinity,
                   height: 56,
@@ -132,11 +120,10 @@ class PaywallScreen extends ConsumerWidget {
                   child: ElevatedButton(
                     onPressed: () {
                       print("Seçilen Plan: $selectedPlan");
-                      // Buradan sonra Anasayfaya geçiş yapılacak
-                      // Navigator.pushReplacement(...)
+                      Navigator.push(context, MaterialPageRoute(builder: (context)=>HomeScreen(),),);
                     },
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFFFF0000), // Pera Kırmızısı
+                      backgroundColor: const Color(0xFFFF0000),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(16),
                       ),
@@ -151,7 +138,6 @@ class PaywallScreen extends ConsumerWidget {
 
                 const SizedBox(height: 16),
 
-                // GÜVENLİK İKONU
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: const [
@@ -166,7 +152,6 @@ class PaywallScreen extends ConsumerWidget {
 
                 const SizedBox(height: 12),
 
-                // ALT LİNKLER
                 Padding(
                   padding: const EdgeInsets.only(bottom: 20),
                   child: Row(
@@ -187,8 +172,6 @@ class PaywallScreen extends ConsumerWidget {
   }
 }
 
-// --- YARDIMCI WIDGET: FİYAT KARTI ---
-// Bu widget sayesinde iki kartı tekrar tekrar yazmıyoruz.
 class _PricingCard extends StatelessWidget {
   final String title;
   final String price;
@@ -210,18 +193,16 @@ class _PricingCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Renk Ayarları
     final borderColor = isSelected ? const Color(0xFFFF0000) : Colors.white24;
     final double borderWidth = isSelected ? 2.0 : 1.0;
 
-    // Gradient Arkaplan (Sadece seçiliyse hafif kırmızımsı, değilse siyah)
     final backgroundGradient = isSelected
         ? LinearGradient(
       begin: Alignment.topCenter,
       end: Alignment.bottomCenter,
       colors: [
-        const Color(0xFFFF0000).withOpacity(0.2), // Üstte hafif kırmızı
-        Colors.black.withOpacity(0.6), // Altta koyu
+        const Color(0xFFFF0000).withOpacity(0.2),
+        Colors.black.withOpacity(0.6),
       ],
     )
         : LinearGradient(
@@ -231,22 +212,20 @@ class _PricingCard extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        height: 220, // SABİT YÜKSEKLİK: Bu sayede ikisi de milimetrik eşit olur.
+        height: 220,
         decoration: BoxDecoration(
           gradient: backgroundGradient,
           borderRadius: BorderRadius.circular(20),
           border: Border.all(color: borderColor, width: borderWidth),
         ),
-        // ClipRRect: İçerik taşarsa köşeleri yuvarla
         child: ClipRRect(
           borderRadius: BorderRadius.circular(18),
           child: Column(
             children: [
-              // 1. KIRMIZI BAŞLIK (Badge)
               Container(
                 width: double.infinity,
                 padding: const EdgeInsets.symmetric(vertical: 8),
-                color: const Color(0xFFFF0000), // Başlık hep kırmızı
+                color: const Color(0xFFFF0000),
                 child: Text(
                   badgeText,
                   textAlign: TextAlign.center,
@@ -258,7 +237,6 @@ class _PricingCard extends StatelessWidget {
                 ),
               ),
 
-              // 2. KART İÇERİĞİ (Geri kalan boşluğu doldurur)
               Expanded(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -267,13 +245,12 @@ class _PricingCard extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         if (isYearly) ...[
-                          // Yıllık planda yıldız ikonu
                           const Icon(Icons.auto_awesome, color: Color(0xFFFFD700), size: 22),
                           const SizedBox(height: 4),
                         ],
                       const SizedBox(width: 6),
                         Text(
-                          title, // "Haftalık" veya "Yıllık"
+                          title,
                           style: const TextStyle(
                             color: Colors.white,
                             fontSize: 20,
@@ -286,7 +263,7 @@ class _PricingCard extends StatelessWidget {
                     const SizedBox(height: 8),
 
                     Text(
-                      price, // Fiyat
+                      price,
                       style: const TextStyle(
                         color: Colors.white,
                         fontSize: 16,
@@ -315,7 +292,6 @@ class _PricingCard extends StatelessWidget {
   }
 }
 
-// Alt Linkler için küçük widget
 class _FooterLink extends StatelessWidget {
   final String text;
   const _FooterLink(this.text);
@@ -328,7 +304,7 @@ class _FooterLink extends StatelessWidget {
         color: Colors.grey,
         fontSize: 12,
         decoration: TextDecoration.underline,
-        fontWeight: FontWeight.bold, // Altı çizili
+        fontWeight: FontWeight.bold,
       ),
     );
   }
