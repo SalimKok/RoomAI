@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:roomai/screens/paywall_screen.dart';
+import 'package:roomai/widgets/custom_button.dart';
+import 'package:roomai/widgets/small_product_card.dart';
 
 class OnboardingScreenTwo extends StatelessWidget {
-  const OnboardingScreenTwo({Key? key}) : super(key: key);
+  const OnboardingScreenTwo({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -33,53 +35,31 @@ class OnboardingScreenTwo extends StatelessWidget {
 }
 
 class _InputProductsSection extends StatelessWidget {
-  const _InputProductsSection({Key? key}) : super(key: key);
+  const _InputProductsSection();
 
   @override
   Widget build(BuildContext context) {
-    return Row(
+    return const Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        _buildSmallProductCard('assets/images/product_1.png'),
-        _buildSmallProductCard('assets/images/product_2.png'),
-        _buildSmallProductCard('assets/images/product_3.png'),
+        SmallProductCard(imagePath: 'assets/images/product_1.png'),
+        SmallProductCard(imagePath: 'assets/images/product_2.png'),
+        SmallProductCard(imagePath: 'assets/images/product_3.png'),
       ],
-    );
-  }
-
-  Widget _buildSmallProductCard(String imagePath) {
-    return Container(
-      width: 100,
-      height: 100,
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-      ),
-      padding: const EdgeInsets.all(4),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(8),
-        child: Image.asset(imagePath, fit: BoxFit.cover),
-      ),
     );
   }
 }
 
 class _AIProcessingSection extends StatelessWidget {
-  const _AIProcessingSection({Key? key}) : super(key: key);
+  const _AIProcessingSection();
 
   @override
   Widget build(BuildContext context) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        const Icon(
-            Icons.arrow_downward_rounded,
-            color: Colors.white54,
-            size: 32
-        ),
-
+        const Icon(Icons.arrow_downward_rounded, color: Colors.white54, size: 32),
         const SizedBox(height: 10),
-
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           decoration: BoxDecoration(
@@ -87,9 +67,9 @@ class _AIProcessingSection extends StatelessWidget {
             borderRadius: BorderRadius.circular(20),
             border: Border.all(color: Colors.white24),
           ),
-          child: Row(
+          child: const Row(
             mainAxisSize: MainAxisSize.min,
-            children: const [
+            children: [
               Text("🍌", style: TextStyle(fontSize: 20)),
               SizedBox(width: 8),
               Text(
@@ -104,21 +84,15 @@ class _AIProcessingSection extends StatelessWidget {
             ],
           ),
         ),
-
         const SizedBox(height: 10),
-
-        const Icon(
-            Icons.arrow_downward_rounded,
-            color: Colors.white54,
-            size: 32
-        ),
+        const Icon(Icons.arrow_downward_rounded, color: Colors.white54, size: 32),
       ],
     );
   }
 }
 
 class _ResultSection extends StatelessWidget {
-  const _ResultSection({Key? key}) : super(key: key);
+  const _ResultSection();
 
   @override
   Widget build(BuildContext context) {
@@ -140,7 +114,7 @@ class _ResultSection extends StatelessWidget {
 }
 
 class _FooterSection extends StatelessWidget {
-  const _FooterSection({Key? key}) : super(key: key);
+  const _FooterSection();
 
   @override
   Widget build(BuildContext context) {
@@ -157,24 +131,14 @@ class _FooterSection extends StatelessWidget {
         ),
         const SizedBox(height: 20),
 
-        SizedBox(
-          width: double.infinity,
-          height: 56,
-          child: ElevatedButton(
-            onPressed: () {
-              Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>PaywallScreen(),),);
-            },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xFFFF0000),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(30),
-              ),
-            ),
-            child: const Text(
-              "Devam Et",
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
-            ),
-          ),
+        CustomButton(
+          text: "Devam Et",
+          onPressed: () {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => const PaywallScreen()),
+            );
+          },
         ),
       ],
     );
