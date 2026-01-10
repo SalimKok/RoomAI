@@ -2,6 +2,9 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:roomai/widgets/image_upload_card.dart';
+import 'package:roomai/widgets/style_selector.dart';
+import 'package:roomai/widgets/gradient_button.dart';
 
 class DesignScreen extends StatefulWidget {
   final String title;
@@ -122,7 +125,6 @@ class _DesignScreenState extends State<DesignScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // BAŞLIK ALANI
             const Text(
               "Hayalindeki Odayı Tasarla",
               style: TextStyle(fontSize: 24, fontWeight: FontWeight.w900, color: Colors.black87),
@@ -134,160 +136,35 @@ class _DesignScreenState extends State<DesignScreen> {
             ),
             const SizedBox(height: 30),
 
-            GestureDetector(
-              onTap: () => _showImageSourceDialog(),
-              child: Container(
-                width: double.infinity,
-                height: 280,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(24),
-                  boxShadow: [
-                    BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 20, offset: const Offset(0, 10)),
-                  ],
-                ),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(24),
-                  child: _selectedImage != null
-                      ? Stack(
-                    fit: StackFit.expand,
-                    children: [
-                      Image.file(_selectedImage!, fit: BoxFit.cover),
-                      Container(
-                        decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            begin: Alignment.topCenter,
-                            end: Alignment.bottomCenter,
-                            colors: [Colors.transparent, Colors.black.withOpacity(0.7)],
-                          ),
-                        ),
-                      ),
-                      Positioned(
-                        bottom: 20,
-                        right: 20,
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                          decoration: BoxDecoration(
-                            color: Colors.white.withOpacity(0.2),
-                            borderRadius: BorderRadius.circular(20),
-                            border: Border.all(color: Colors.white.withOpacity(0.5)),
-                          ),
-                          child: const Row(
-                            children: [
-                              Icon(Icons.edit, color: Colors.white, size: 16),
-                              SizedBox(width: 8),
-                              Text("Değiştir", style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600)),
-                            ],
-                          ),
-                        ),
-                      )
-                    ],
-                  )
-                      : Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Container(
-                        padding: const EdgeInsets.all(20),
-                        decoration: BoxDecoration(
-                          color: Colors.orange.shade50,
-                          shape: BoxShape.circle,
-                        ),
-                        child: Icon(Icons.add_a_photo_outlined, size: 40, color: Colors.orange.shade400),
-                      ),
-                      const SizedBox(height: 20),
-                      const Text("Fotoğraf Yükle", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
-                      const SizedBox(height: 5),
-                      Text("veya kamerayı kullan", style: TextStyle(color: Colors.grey.shade400, fontSize: 12)),
-                    ],
-                  ),
-                ),
-              ),
+            ImageUploadCard(
+              image: _selectedImage,
+              onTap: _showImageSourceDialog,
             ),
+
             const SizedBox(height: 35),
 
-            const Text("Tasarım Stili", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
-
-            const SizedBox(height: 15),
-            SizedBox(
-              height: 55,
-              child: ListView.builder(
-                scrollDirection: Axis.horizontal,
-                itemCount: styles.length,
-                clipBehavior: Clip.none,
-                itemBuilder: (context, index) {
-                  final isSelected = selectedStyleIndex == index;
-                  return GestureDetector(
-                    onTap: () => setState(() => selectedStyleIndex = index),
-                    child: AnimatedContainer(
-                      duration: const Duration(milliseconds: 200),
-                      margin: const EdgeInsets.only(right: 12),
-                      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-                      decoration: BoxDecoration(
-                        color: isSelected ? const Color(0xFF2D2D2D) : Colors.white,
-                        borderRadius: BorderRadius.circular(16),
-                        border: Border.all(color: isSelected ? Colors.transparent : Colors.grey.shade200),
-                        boxShadow: isSelected
-                            ? [BoxShadow(color: const Color(0xFF2D2D2D).withOpacity(0.3), blurRadius: 10, offset: const Offset(0, 4))]
-                            : [],
-                      ),
-                      child: Center(
-                        child: Text(
-                          styles[index],
-                          style: TextStyle(
-                            color: isSelected ? Colors.white : Colors.black54,
-                            fontWeight: FontWeight.w600,
-                            fontSize: 14,
-                          ),
-                        ),
-                      ),
-                    ),
-                  );
-                },
-              ),
+            StyleSelector(
+              styles: styles,
+              selectedIndex: selectedStyleIndex,
+              onStyleSelected: (index) {
+                setState(() => selectedStyleIndex = index);
+              },
             ),
-
             const SizedBox(height: 40),
 
-            Container(
-              width: double.infinity,
-              height: 60,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(20),
-                gradient: const LinearGradient(
-                  colors: [Color(0xFFFFA726), Color(0xFFFF7043)],
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                ),
-                boxShadow: [
-                  BoxShadow(color: Colors.orange.withOpacity(0.4), blurRadius: 15, offset: const Offset(0, 8)),
-                ],
-              ),
-              child: ElevatedButton(
-                onPressed: () {
-                  if (_selectedImage == null) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text("Lütfen önce bir fotoğraf yükleyin!"), backgroundColor: Colors.redAccent),
-                    );
-                  } else {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text("${styles[selectedStyleIndex]} stilinde tasarlanıyor..."), backgroundColor: Colors.green),
-                    );
-                  }
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.transparent,
-                  shadowColor: Colors.transparent,
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-                ),
-                child: const Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(Icons.auto_awesome, color: Colors.white, size: 22),
-                    SizedBox(width: 12),
-                    Text("Sihri Başlat", style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold, letterSpacing: 0.5)),
-                  ],
-                ),
-              ),
+            GradientButton(
+              text: "Sihri Başlat",
+              onPressed: () {
+                if (_selectedImage == null) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text("Lütfen önce bir fotoğraf yükleyin!"), backgroundColor: Colors.redAccent),
+                  );
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text("${styles[selectedStyleIndex]} stilinde tasarlanıyor..."), backgroundColor: Colors.green),
+                  );
+                }
+              },
             ),
             const SizedBox(height: 20),
           ],
