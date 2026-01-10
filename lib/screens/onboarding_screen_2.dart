@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:roomai/screens/paywall_screen.dart';
 
 class OnboardingScreenTwo extends StatelessWidget {
   const OnboardingScreenTwo({Key? key}) : super(key: key);
@@ -161,7 +162,7 @@ class _FooterSection extends StatelessWidget {
           height: 56,
           child: ElevatedButton(
             onPressed: () {
-              print("Paywall'a geçiliyor...");
+              Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>PaywallScreen(),),);
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: const Color(0xFFFF0000),
