@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:roomai/screens/landing_screen.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(ProviderScope(child: MyApp()));
 }
 
 class MyApp extends StatelessWidget {
@@ -10,11 +11,14 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     return MaterialApp(
       debugShowCheckedModeBanner: false,
+      title: 'Home Garden Designer',
+      theme: ThemeData(
+        primarySwatch: Colors.green,
+        // Font eklemek istersen buraya eklersin
+      ),
       home: LandingScreen(),
     );
   }
 }
-
