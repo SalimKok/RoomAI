@@ -13,11 +13,6 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Home Garden Designer',
-      theme: ThemeData(
-        primarySwatch: Colors.green,
-        // Font eklemek istersen buraya eklersin
-      ),
       home: LandingScreen(),
     );
   }
