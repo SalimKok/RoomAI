@@ -6,7 +6,6 @@ import 'package:roomai/services/design_service.dart';
 import 'package:roomai/widgets/image_upload_card.dart';
 import 'package:roomai/widgets/style_selector.dart';
 import 'package:roomai/widgets/gradient_button.dart';
-import 'package:roomai/widgets/custom_app_bar.dart';
 
 class DesignScreen extends StatefulWidget {
   final String title;
@@ -137,9 +136,15 @@ class _DesignScreenState extends State<DesignScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFF8F9FA),
-      appBar: CustomAppBar(
-        title: widget.title,
-        showProBadge: false,
+      appBar: AppBar(
+        title: Text(
+            widget.title,
+            style: const TextStyle(color: Colors.black87, fontSize: 24, fontWeight: FontWeight.bold)
+        ),
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        centerTitle: true,
+        iconTheme: const IconThemeData(color: Colors.black87),
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 10),
