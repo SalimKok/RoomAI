@@ -2,9 +2,11 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:roomai/services/design_service.dart';
 import 'package:roomai/widgets/image_upload_card.dart';
 import 'package:roomai/widgets/style_selector.dart';
 import 'package:roomai/widgets/gradient_button.dart';
+import 'package:roomai/widgets/custom_app_bar.dart';
 
 class DesignScreen extends StatefulWidget {
   final String title;
@@ -20,7 +22,9 @@ class _DesignScreenState extends State<DesignScreen> {
 
   File? _selectedImage;
   final ImagePicker _picker = ImagePicker();
+  bool _isLoading = false;
 
+  final DesignService _designService = DesignService();
   Future<void> _checkPermissionAndPick(ImageSource source) async {
     PermissionStatus status;
     if (source == ImageSource.camera) {
@@ -84,21 +88,13 @@ class _DesignScreenState extends State<DesignScreen> {
             child: Wrap(
               children: [
                 ListTile(
-                  leading: Container(
-                    padding: const EdgeInsets.all(10),
-                    decoration: BoxDecoration(color: Colors.orange.shade50, shape: BoxShape.circle),
-                    child: const Icon(Icons.photo_library, color: Colors.orange),
-                  ),
-                  title: const Text("Galeriden Seç", style: TextStyle(fontWeight: FontWeight.w600)),
+                  leading: const Icon(Icons.photo_library, color: Colors.orange),
+                  title: const Text("Galeriden Seç"),
                   onTap: () { Navigator.pop(context); _checkPermissionAndPick(ImageSource.gallery); },
                 ),
                 ListTile(
-                  leading: Container(
-                    padding: const EdgeInsets.all(10),
-                    decoration: BoxDecoration(color: Colors.blue.shade50, shape: BoxShape.circle),
-                    child: const Icon(Icons.camera_alt, color: Colors.blue),
-                  ),
-                  title: const Text("Kamera ile Çek", style: TextStyle(fontWeight: FontWeight.w600)),
+                  leading: const Icon(Icons.camera_alt, color: Colors.blue),
+                  title: const Text("Kamera ile Çek"),
                   onTap: () { Navigator.pop(context); _checkPermissionAndPick(ImageSource.camera); },
                 ),
               ],
@@ -109,62 +105,70 @@ class _DesignScreenState extends State<DesignScreen> {
     );
   }
 
+  Future<void> _onSavePressed() async {
+    if (_selectedImage == null) {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Lütfen fotoğraf seçin!")));
+      return;
+    }
+
+    setState(() => _isLoading = true);
+
+    try {
+      await _designService.saveDesign(
+          imageFile: _selectedImage!,
+          style: styles[selectedStyleIndex]
+      );
+
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text("Tasarım başarıyla kaydedildi!"), backgroundColor: Colors.green)
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(e.toString()), backgroundColor: Colors.red));
+      }
+    } finally {
+      if (mounted) setState(() => _isLoading = false);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFF8F9FA),
-      appBar: AppBar(
-        title: Text(widget.title, style: const TextStyle(color: Colors.black87, fontSize: 18, fontWeight: FontWeight.bold)),
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        centerTitle: true,
-        iconTheme: const IconThemeData(color: Colors.black87),
+      appBar: CustomAppBar(
+        title: widget.title,
+        showProBadge: false,
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 10),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
-              "Hayalindeki Odayı Tasarla",
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.w900, color: Colors.black87),
-            ),
+            const Text("Hayalindeki Odayı Tasarla", style: TextStyle(fontSize: 24, fontWeight: FontWeight.w900)),
             const SizedBox(height: 5),
-            Text(
-              "Fotoğrafını yükle ve yapay zekanın sihrini izle.",
-              style: TextStyle(fontSize: 14, color: Colors.grey.shade600, height: 1.5),
-            ),
+            Text("Fotoğrafını yükle ve yapay zekanın sihrini izle.", style: TextStyle(color: Colors.grey.shade600)),
             const SizedBox(height: 30),
 
             ImageUploadCard(
               image: _selectedImage,
               onTap: _showImageSourceDialog,
             ),
-
             const SizedBox(height: 35),
 
             StyleSelector(
               styles: styles,
               selectedIndex: selectedStyleIndex,
-              onStyleSelected: (index) {
-                setState(() => selectedStyleIndex = index);
-              },
+              onStyleSelected: (index) => setState(() => selectedStyleIndex = index),
             ),
             const SizedBox(height: 40),
 
-            GradientButton(
+            _isLoading
+                ? const Center(child: CircularProgressIndicator(color: Colors.orange))
+                : GradientButton(
               text: "Sihri Başlat",
-              onPressed: () {
-                if (_selectedImage == null) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text("Lütfen önce bir fotoğraf yükleyin!"), backgroundColor: Colors.redAccent),
-                  );
-                } else {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text("${styles[selectedStyleIndex]} stilinde tasarlanıyor..."), backgroundColor: Colors.green),
-                  );
-                }
-              },
+              onPressed: _onSavePressed,
             ),
             const SizedBox(height: 20),
           ],

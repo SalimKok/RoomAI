@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import '../models/design_item.dart';
 
@@ -32,14 +33,12 @@ class DesignCard extends StatelessWidget {
                 flex: 6,
                 child: Stack(
                   children: [
-                    Container(
-                      decoration: BoxDecoration(
-                        image: DecorationImage(
-                          image: AssetImage(item.imagePath),
-                          fit: BoxFit.cover,
-                        ),
-                      ),
+                    Container(color: Colors.grey.shade200),
+
+                    Positioned.fill(
+                      child: _buildImage(),
                     ),
+
                     if (item.badgeText != null)
                       Positioned(
                         top: 10,
@@ -63,6 +62,7 @@ class DesignCard extends StatelessWidget {
                   ],
                 ),
               ),
+
               if (item.subtitle.isNotEmpty)
                 Expanded(
                   flex: 4,
@@ -97,5 +97,35 @@ class DesignCard extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Widget _buildImage() {
+    if (item.imagePath.startsWith('http')) {
+      return Image.network(
+        item.imagePath,
+        fit: BoxFit.cover,
+        errorBuilder: (c, e, s) => const Center(child: Icon(Icons.broken_image)),
+      );
+    }
+
+    else if (item.imagePath.startsWith('assets')) {
+      return Image.asset(
+        item.imagePath,
+        fit: BoxFit.cover,
+        errorBuilder: (c, e, s) => const Center(child: Icon(Icons.error)),
+      );
+    }
+
+    else {
+      try {
+        return Image.memory(
+          base64Decode(item.imagePath),
+          fit: BoxFit.cover,
+          errorBuilder: (c, e, s) => const Center(child: Icon(Icons.broken_image)),
+        );
+      } catch (e) {
+        return const Center(child: Icon(Icons.error));
+      }
+    }
   }
 }
