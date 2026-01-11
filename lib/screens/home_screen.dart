@@ -3,6 +3,7 @@ import 'package:roomai/models/design_item.dart';
 import 'package:roomai/widgets/design_card.dart';
 import 'package:roomai/screens/design_screen.dart';
 import 'package:roomai/screens/profile_screen.dart';
+import 'package:roomai/widgets/custom_app_bar.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -13,6 +14,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   int _selectedIndex = 0;
+
   final List<DesignItem> _designItems = [
     DesignItem(
       title: "Boş Oda Tasarımı",
@@ -44,7 +46,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     final List<Widget> pages = [
       _buildHomeBody(),
-      const Scaffold(body: Center(child: Text("Keşfet"))), // Placeholder
+      const Scaffold(body: Center(child: Text("Keşfet"))),
       const ProfileScreen(),
     ];
 
@@ -53,85 +55,64 @@ class _HomeScreenState extends State<HomeScreen> {
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _selectedIndex,
         onTap: (i) => setState(() => _selectedIndex = i),
-        selectedItemColor: Colors.red,
+        selectedItemColor: Colors.orange,
         unselectedItemColor: Colors.grey,
         type: BottomNavigationBarType.fixed,
+        showSelectedLabels: false,
+        showUnselectedLabels: false,
         items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: "Ana Sayfa"),
-          BottomNavigationBarItem(icon: Icon(Icons.explore), label: "Keşfet"),
-          BottomNavigationBarItem(icon: Icon(Icons.person), label: "Profil"),
+          BottomNavigationBarItem(icon: Icon(Icons.home_filled), label: "Ana Sayfa"),
+          BottomNavigationBarItem(icon: Icon(Icons.explore_outlined), label: "Keşfet"),
+          BottomNavigationBarItem(icon: Icon(Icons.person_outline), label: "Profil"),
         ],
       ),
     );
   }
 
   Widget _buildHomeBody() {
-    return SafeArea(
-      child: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                const Text("Room AI", style: TextStyle(fontSize: 30, fontWeight: FontWeight.w900)),
-                Row(
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                      decoration: BoxDecoration(color: Colors.orange, borderRadius: BorderRadius.circular(20)),
-                      child: const Row(
-                        children: [
-                          Icon(Icons.monetization_on, color: Colors.white, size: 16),
-                          SizedBox(width: 4),
-                          Text("Abone Ol", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(width: 10),
-                    const Icon(Icons.menu, size: 28),
-                  ],
-                ),
-              ],
-            ),
-          ),
-          // Content
-          Expanded(
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0),
-              child: Column(
-                children: [
-                  _buildBanner(),
-                  const SizedBox(height: 20),
-                  GridView.builder(
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    itemCount: _designItems.length,
-                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2,
-                      childAspectRatio: 0.75,
-                      crossAxisSpacing: 16,
-                      mainAxisSpacing: 16,
-                    ),
-                    itemBuilder: (context, index) {
-                      final item = _designItems[index];
-                      return DesignCard(
-                        item: item,
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (context) => DesignScreen(title: item.title)),
-                          );
-                        },
-                      );
-                    },
-                  ),
-                  const SizedBox(height: 20),
-                ],
+    return Scaffold(
+      backgroundColor: const Color(0xFFF2F4F8),
+      appBar: CustomAppBar(
+        title: "Room AI",
+        showProBadge: true,
+        onSettingsTap: () {
+          debugPrint("Menü tıklandı");
+        },
+      ),
+
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 10),
+        child: Column(
+          children: [
+            _buildBanner(),
+            const SizedBox(height: 20),
+
+            GridView.builder(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              itemCount: _designItems.length,
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                childAspectRatio: 0.75,
+                crossAxisSpacing: 16,
+                mainAxisSpacing: 16,
               ),
+              itemBuilder: (context, index) {
+                final item = _designItems[index];
+                return DesignCard(
+                  item: item,
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => DesignScreen(title: item.title)),
+                    );
+                  },
+                );
+              },
             ),
-          ),
-        ],
+            const SizedBox(height: 20),
+          ],
+        ),
       ),
     );
   }
@@ -141,26 +122,53 @@ class _HomeScreenState extends State<HomeScreen> {
       width: double.infinity,
       height: 160,
       decoration: BoxDecoration(
-        color: const Color(0xFFC7A006),
         borderRadius: BorderRadius.circular(20),
-        gradient: const LinearGradient(colors: [Color(0xFFD4AF37), Color(0xFF654321)]),
+        // Daha canlı bir gradient
+        gradient: const LinearGradient(
+          colors: [Color(0xFFD4AF37), Color(0xFF8B6914)],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.orange.withOpacity(0.2),
+            blurRadius: 10,
+            offset: const Offset(0, 5),
+          ),
+        ],
       ),
       child: Stack(
         children: [
-          const Positioned(
-            left: 16, bottom: 50,
-            child: Text("Room Banana Pro", style: TextStyle(color: Colors.amber, fontWeight: FontWeight.bold, fontSize: 18)),
+          Positioned(
+            right: -20,
+            top: -20,
+            child: Icon(Icons.star, color: Colors.white.withOpacity(0.1), size: 150),
           ),
           const Positioned(
-            left: 16, bottom: 20,
-            child: Text("Standartları aşın...", style: TextStyle(color: Colors.white70, fontSize: 10, fontWeight: FontWeight.bold)),
+            left: 20, bottom: 50,
+            child: Text(
+                "Room Banana Pro",
+                style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 20)
+            ),
+          ),
+          const Positioned(
+            left: 20, bottom: 20,
+            child: Text(
+                "Standartları aşın...",
+                style: TextStyle(color: Colors.white70, fontSize: 12, fontWeight: FontWeight.w500)
+            ),
           ),
           Positioned(
             right: 16, bottom: 16,
             child: ElevatedButton(
               onPressed: () {},
-              style: ElevatedButton.styleFrom(backgroundColor: Colors.orange),
-              child: const Text("Dene >", style: TextStyle(color: Colors.white)),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.white,
+                foregroundColor: Colors.orange,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              ),
+              child: const Text("Dene >", style: TextStyle(fontWeight: FontWeight.bold)),
             ),
           ),
         ],
