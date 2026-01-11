@@ -141,7 +141,7 @@ class _DesignScreenState extends State<DesignScreen> {
             widget.title,
             style: const TextStyle(color: Colors.black87, fontSize: 24, fontWeight: FontWeight.bold)
         ),
-        backgroundColor: Colors.transparent,
+        backgroundColor: Colors.white,
         elevation: 0,
         centerTitle: true,
         iconTheme: const IconThemeData(color: Colors.black87),
@@ -156,9 +156,23 @@ class _DesignScreenState extends State<DesignScreen> {
             Text("Fotoğrafını yükle ve yapay zekanın sihrini izle.", style: TextStyle(color: Colors.grey.shade600)),
             const SizedBox(height: 30),
 
-            ImageUploadCard(
-              image: _selectedImage,
-              onTap: _showImageSourceDialog,
+            Container(
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(20),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey,
+                    blurRadius: 15,
+                    offset: const Offset(0, 5),
+                    spreadRadius: 2,
+                  ),
+                ],
+              ),
+              child: ImageUploadCard(
+                image: _selectedImage,
+                onTap: _showImageSourceDialog,
+              ),
             ),
             const SizedBox(height: 35),
 

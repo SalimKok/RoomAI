@@ -18,9 +18,9 @@ class DesignCard extends StatelessWidget {
           borderRadius: BorderRadius.circular(20),
           boxShadow: [
             BoxShadow(
-              color: Colors.grey.withOpacity(0.1),
-              blurRadius: 5,
-              spreadRadius: 1,
+              color: Colors.grey,
+              blurRadius: 6,
+              spreadRadius: 2,
             ),
           ],
         ),

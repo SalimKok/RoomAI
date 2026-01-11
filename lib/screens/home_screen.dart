@@ -58,8 +58,8 @@ class _HomeScreenState extends State<HomeScreen> {
         selectedItemColor: Colors.orange,
         unselectedItemColor: Colors.grey,
         type: BottomNavigationBarType.fixed,
-        showSelectedLabels: false,
-        showUnselectedLabels: false,
+        showSelectedLabels: true,
+        showUnselectedLabels: true,
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home_filled), label: "Ana Sayfa"),
           BottomNavigationBarItem(icon: Icon(Icons.explore_outlined), label: "Keşfet"),
@@ -123,7 +123,6 @@ class _HomeScreenState extends State<HomeScreen> {
       height: 160,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(20),
-        // Daha canlı bir gradient
         gradient: const LinearGradient(
           colors: [Color(0xFFD4AF37), Color(0xFF8B6914)],
           begin: Alignment.topLeft,
@@ -131,7 +130,7 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         boxShadow: [
           BoxShadow(
-            color: Colors.orange.withOpacity(0.2),
+            color: Colors.orange.withOpacity(0.5),
             blurRadius: 10,
             offset: const Offset(0, 5),
           ),
