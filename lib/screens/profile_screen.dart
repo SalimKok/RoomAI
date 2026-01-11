@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:roomai/models/design_item.dart';
+import 'package:roomai/screens/paywall_screen.dart';
 import 'package:roomai/widgets/design_card.dart';
 import 'package:roomai/widgets/custom_app_bar.dart';
 
@@ -14,8 +15,14 @@ class ProfileScreen extends StatelessWidget {
       appBar: CustomAppBar(
         title: "Room AI",
         showProBadge: true,
+        onProTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const PaywallScreen()),
+          );
+        },
         onSettingsTap: () {
-          debugPrint("Ayarlar tıklandı");
+          debugPrint("Menü tıklandı");
         },
       ),
       body: SafeArea(

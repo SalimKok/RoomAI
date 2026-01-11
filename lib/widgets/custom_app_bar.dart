@@ -4,12 +4,14 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
   final bool showProBadge;
   final VoidCallback? onSettingsTap;
+  final VoidCallback? onProTap;
 
   const CustomAppBar({
     super.key,
     required this.title,
     this.showProBadge = false,
     this.onSettingsTap,
+    this.onProTap
   });
 
   @override
@@ -35,21 +37,24 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
 
           if (showProBadge) ...[
             const SizedBox(width: 12),
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-              decoration: BoxDecoration(
-                gradient: const LinearGradient(colors: [Color(0xFFFFA726), Color(0xFFFF7043)]),
-                borderRadius: BorderRadius.circular(20),
-                boxShadow: [
-                  BoxShadow(color: Colors.orange.withOpacity(0.3), blurRadius: 8, offset: const Offset(0, 4)),
-                ],
-              ),
-              child: const Row(
-                children: [
-                  Icon(Icons.diamond_outlined, color: Colors.white, size: 18),
-                  SizedBox(width: 4),
-                  Text("Pro", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 18)),
-                ],
+            GestureDetector(
+              onTap: onProTap,
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                decoration: BoxDecoration(
+                  gradient: const LinearGradient(colors: [Color(0xFFFFA726), Color(0xFFFF7043)]),
+                  borderRadius: BorderRadius.circular(20),
+                  boxShadow: [
+                    BoxShadow(color: Colors.orange.withOpacity(0.3), blurRadius: 8, offset: const Offset(0, 4)),
+                  ],
+                ),
+                child: const Row(
+                  children: [
+                    Icon(Icons.diamond_outlined, color: Colors.white, size: 18),
+                    SizedBox(width: 4),
+                    Text("Pro", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 18)),
+                  ],
+                ),
               ),
             ),
           ],

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:roomai/models/design_item.dart';
+import 'package:roomai/screens/paywall_screen.dart';
 import 'package:roomai/widgets/design_card.dart';
 import 'package:roomai/screens/design_screen.dart';
 import 'package:roomai/screens/profile_screen.dart';
@@ -75,6 +76,12 @@ class _HomeScreenState extends State<HomeScreen> {
       appBar: CustomAppBar(
         title: "Room AI",
         showProBadge: true,
+        onProTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const PaywallScreen()),
+          );
+        },
         onSettingsTap: () {
           debugPrint("Menü tıklandı");
         },
